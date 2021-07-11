@@ -16,11 +16,11 @@ jobs:
         with:
           submodules: true
       - name: Build project # This would actually build your project, using zip for an example artifact
-        run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
-        run: cmake . -DPATCH_VERSION=${{ github.run_number }}
-        run: cmake --build .
-        run: cmake --build . --target test
-        run: cmake --build . --target package
+      - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
+      - run: cmake . -DPATCH_VERSION=${{ github.run_number }}
+      - run: cmake --build .
+      - run: cmake --build . --target test
+      - run: cmake --build . --target package
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
