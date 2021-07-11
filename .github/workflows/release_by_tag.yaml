@@ -1,18 +1,26 @@
-name: 'C++ CI/CD By Tag'
-
 on:
   push:
+    # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*'
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: 'Upload Release Asset for HelloWorld'
 
 jobs:
-  deploy:
+  build:
+    name: Upload Release Asset
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          name: helloworld-{{ github.ref}}-Linux.deb
+          submodules: true
+      - name: Build project # This would actually build your project, using zip for an example artifact
+        - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
+        - run: cmake . -DPATCH_VERSION=${{ github.run_number }}
+        - run: cmake --build .
+        - run: cmake --build . --target test
+        - run: cmake --build . --target package
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
